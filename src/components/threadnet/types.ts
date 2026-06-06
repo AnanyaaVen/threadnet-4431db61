@@ -1,1 +1,1 @@
-export type Screen = "onboarding" | "feed" | "detail" | "match" | "chat" | "profile";
+export type Screen = "signup" | "verify" | "onboarding" | "feed" | "detail" | "match" | "chat" | "profile";

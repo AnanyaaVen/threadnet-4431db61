@@ -6,6 +6,8 @@ import { ProjectDetail } from "@/components/threadnet/ProjectDetail";
 import { MatchScreen } from "@/components/threadnet/MatchScreen";
 import { Chat } from "@/components/threadnet/Chat";
 import { BottomNav } from "@/components/threadnet/BottomNav";
+import { PhoneSignup } from "@/components/threadnet/PhoneSignup";
+import { VerifyPin } from "@/components/threadnet/VerifyPin";
 import { PROJECTS, type Project } from "@/components/threadnet/data";
 import type { Screen } from "@/components/threadnet/types";
 import { Avatar } from "@/components/threadnet/Feed";
@@ -24,13 +26,33 @@ export const Route = createFileRoute("/")({
 });
 
 function App() {
-  const [screen, setScreen] = useState<Screen>("onboarding");
+  const [screen, setScreen] = useState<Screen>("signup");
   const [activeProject, setActiveProject] = useState<Project>(PROJECTS[0]);
+  const [phone, setPhone] = useState("");
+  const [pin, setPin] = useState("");
 
   const showNav = ["feed", "match", "chat", "profile"].includes(screen);
 
+  const sendPin = (p: string, code: string) => {
+    setPhone(p);
+    setPin(code);
+    setScreen("verify");
+  };
+
   return (
     <div className="mx-auto min-h-dvh max-w-md bg-background text-foreground">
+      {screen === "signup" && <PhoneSignup onSend={sendPin} />}
+
+      {screen === "verify" && (
+        <VerifyPin
+          phone={phone}
+          expectedPin={pin}
+          onBack={() => setScreen("signup")}
+          onVerified={() => setScreen("onboarding")}
+          onResend={() => setPin(Math.floor(1000 + Math.random() * 9000).toString())}
+        />
+      )}
+
       {screen === "onboarding" && <Onboarding onComplete={() => setScreen("feed")} />}
 
       {screen === "feed" && (
