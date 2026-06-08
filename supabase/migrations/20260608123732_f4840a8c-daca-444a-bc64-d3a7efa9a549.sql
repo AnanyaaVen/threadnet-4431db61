@@ -1,0 +1,1 @@
+CREATE POLICY "Authenticated users can view onboarded profiles" ON public.profiles FOR SELECT TO authenticated USING (onboarded = true);

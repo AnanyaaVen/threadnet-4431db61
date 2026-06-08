@@ -11,6 +11,7 @@ import { BottomNav } from "@/components/threadnet/BottomNav";
 import { PhoneSignup } from "@/components/threadnet/PhoneSignup";
 import { VerifyPin } from "@/components/threadnet/VerifyPin";
 import { EditProfile } from "@/components/threadnet/EditProfile";
+import { MatchesScreen } from "@/components/threadnet/MatchesScreen";
 import { PROJECTS, type Project } from "@/components/threadnet/data";
 import { EMPTY_PROFILE, type ProfileData, type Screen } from "@/components/threadnet/types";
 import { Avatar } from "@/components/threadnet/Feed";
@@ -93,7 +94,7 @@ function App() {
     };
   }, [userId]);
 
-  const showNav = ["feed", "match", "chat", "profile"].includes(screen);
+  const showNav = ["feed", "matches", "match", "chat", "profile"].includes(screen);
 
   const sendPin = (p: string, code: string) => {
     setPhone(p);
@@ -219,6 +220,8 @@ function App() {
       {screen === "match" && (
         <MatchScreen project={activeProject} onChat={() => setScreen("chat")} onKeepSwiping={() => setScreen("feed")} />
       )}
+
+      {screen === "matches" && <MatchesScreen me={profile} currentUserId={userId} />}
 
       {screen === "chat" && <Chat project={activeProject} onBack={() => setScreen("feed")} />}
 
