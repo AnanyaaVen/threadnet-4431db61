@@ -5,6 +5,7 @@ export type Screen =
   | "feed"
   | "detail"
   | "match"
+  | "matches"
   | "chat"
   | "profile"
   | "edit";

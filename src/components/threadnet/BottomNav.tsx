@@ -3,7 +3,7 @@ import type { Screen } from "./types";
 
 const items: { id: Screen; label: string; icon: typeof Home }[] = [
   { id: "feed", label: "Feed", icon: Home },
-  { id: "match", label: "Matches", icon: Sparkles },
+  { id: "matches", label: "Matches", icon: Sparkles },
   { id: "chat", label: "Chat", icon: MessageCircle },
   { id: "profile", label: "Profile", icon: User },
 ];
