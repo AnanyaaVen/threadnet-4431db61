@@ -1,31 +1,43 @@
 import { useState } from "react";
 import { ArrowRight, Check, GraduationCap } from "lucide-react";
+import type { ProfileData } from "./types";
 
 const MAJORS = ["Computer Science", "Business", "Marketing", "Design", "Data Science", "Psychology", "Economics", "Other"];
 const SKILLS = ["Design", "Frontend", "Backend", "iOS", "Marketing", "Sales", "Video", "Writing", "Research", "ML/AI", "Product", "Ops"];
 const INTERESTS = ["Edtech", "Wellness", "Fintech", "Social", "Climate", "AI", "Creator", "Hardware", "Marketplace"];
+const ROLES = [
+  { value: "founder", label: "I'm a Founder", desc: "I have an idea and I'm looking for collaborators." },
+  { value: "joiner", label: "I want to join a project", desc: "I'm looking for something exciting to help build." },
+];
 
-export function Onboarding({ onComplete }: { onComplete: () => void }) {
+export function Onboarding({
+  initial,
+  onComplete,
+  saving,
+}: {
+  initial?: Partial<ProfileData>;
+  onComplete: (data: Omit<ProfileData, "display_name" | "onboarded">) => void;
+  saving?: boolean;
+}) {
   const [step, setStep] = useState(0);
-  const [major, setMajor] = useState<string | null>(null);
-  const [skills, setSkills] = useState<string[]>([]);
-  const [interests, setInterests] = useState<string[]>([]);
-  const [role, setRole] = useState<"founder" | "joiner" | null>(null);
+  const [majors, setMajors] = useState<string[]>(initial?.majors ?? []);
+  const [skills, setSkills] = useState<string[]>(initial?.skills ?? []);
+  const [interests, setInterests] = useState<string[]>(initial?.interests ?? []);
+  const [roles, setRoles] = useState<string[]>(initial?.roles ?? []);
 
   const toggle = (arr: string[], v: string, set: (v: string[]) => void) =>
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
   const canAdvance =
-    (step === 0 && !!major) ||
+    (step === 0 && majors.length > 0) ||
     (step === 1 && skills.length > 0) ||
     (step === 2 && interests.length > 0) ||
-    (step === 3 && !!role);
+    (step === 3 && roles.length > 0);
 
   const progress = ((step + 1) / 4) * 100;
 
   return (
     <div className="flex min-h-dvh flex-col px-6 pb-8 pt-12">
-      {/* Header */}
       <div className="mb-6 flex items-center gap-2">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15">
           <GraduationCap className="h-5 w-5" style={{ color: "var(--mint)" }} />
@@ -36,7 +48,6 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
         </div>
       </div>
 
-      {/* Progress */}
       <div className="mb-8 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
         <div
           className="h-full rounded-full transition-all duration-500 ease-out"
@@ -44,14 +55,10 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
         />
       </div>
 
-      {/* Step content */}
       <div key={step} className="flex-1 animate-slide-up">
         {step === 0 && (
-          <Step
-            title="What are you studying?"
-            sub="We'll match you with builders in adjacent fields too."
-          >
-            <ChipGrid options={MAJORS} selected={major ? [major] : []} onToggle={(v) => setMajor(v)} single />
+          <Step title="What are you studying?" sub="Pick all that apply — double majors and minors welcome.">
+            <ChipGrid options={MAJORS} selected={majors} onToggle={(v) => toggle(majors, v, setMajors)} />
           </Step>
         )}
         {step === 1 && (
@@ -65,20 +72,17 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
           </Step>
         )}
         {step === 3 && (
-          <Step title="Where do you fit?" sub="You can change this later.">
+          <Step title="Where do you fit?" sub="Pick one or both — you can change this later.">
             <div className="grid gap-3">
-              <RoleCard
-                label="I'm a Founder"
-                desc="I have an idea and I'm looking for collaborators."
-                active={role === "founder"}
-                onClick={() => setRole("founder")}
-              />
-              <RoleCard
-                label="I want to join a project"
-                desc="I'm looking for something exciting to help build."
-                active={role === "joiner"}
-                onClick={() => setRole("joiner")}
-              />
+              {ROLES.map((r) => (
+                <RoleCard
+                  key={r.value}
+                  label={r.label}
+                  desc={r.desc}
+                  active={roles.includes(r.value)}
+                  onClick={() => toggle(roles, r.value, setRoles)}
+                />
+              ))}
             </div>
             <p className="mt-8 text-center text-sm italic text-muted-foreground">
               Find your people. Build something real.
@@ -87,14 +91,16 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
         )}
       </div>
 
-      {/* CTA */}
       <button
-        disabled={!canAdvance}
-        onClick={() => (step === 3 ? onComplete() : setStep(step + 1))}
+        disabled={!canAdvance || saving}
+        onClick={() => {
+          if (step === 3) onComplete({ majors, skills, interests, roles });
+          else setStep(step + 1);
+        }}
         className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-base font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-40"
       >
-        {step === 3 ? "Enter ThreadNet" : "Continue"}
-        <ArrowRight className="h-5 w-5" />
+        {step === 3 ? (saving ? "Saving…" : "Enter ThreadNet") : "Continue"}
+        {!saving && <ArrowRight className="h-5 w-5" />}
       </button>
     </div>
   );
@@ -114,12 +120,10 @@ function ChipGrid({
   options,
   selected,
   onToggle,
-  single,
 }: {
   options: string[];
   selected: string[];
   onToggle: (v: string) => void;
-  single?: boolean;
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -136,7 +140,7 @@ function ChipGrid({
               borderColor: active ? "var(--mint)" : "var(--border)",
             }}
           >
-            {active && !single && <Check className="mr-1 inline h-3.5 w-3.5" />}
+            {active && <Check className="mr-1 inline h-3.5 w-3.5" />}
             {opt}
           </button>
         );
