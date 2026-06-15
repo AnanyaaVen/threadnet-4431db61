@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { Heart, X, GraduationCap, Info } from "lucide-react";
+import { Heart, X, Info } from "lucide-react";
 import { PROJECTS, type Project } from "./data";
 
 export function Feed({
@@ -102,14 +102,9 @@ export function Feed({
 function Header() {
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15">
-          <GraduationCap className="h-4 w-4" style={{ color: "var(--mint)" }} />
-        </div>
-        <span className="text-xl font-extrabold tracking-tight">ThreadNet</span>
-      </div>
+      <span className="text-xl font-extrabold tracking-tight">ThreadNet</span>
       <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold text-muted-foreground">
-        Menlo College
+        Discover
       </span>
     </div>
   );
@@ -138,9 +133,6 @@ function CardBody({ project, drag, onOpen }: { project: Project; drag: number; o
       {/* Top emoji block */}
       <div className="flex items-center justify-between px-6 pt-7">
         <span className="text-5xl">{project.emoji}</span>
-        <span className="rounded-full border border-border bg-background/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
-          Menlo College
-        </span>
       </div>
 
       {/* Project name + tagline — hero */}

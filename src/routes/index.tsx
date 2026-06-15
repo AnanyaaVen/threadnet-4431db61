@@ -8,40 +8,32 @@ import { ProjectDetail } from "@/components/threadnet/ProjectDetail";
 import { MatchScreen } from "@/components/threadnet/MatchScreen";
 import { Chat } from "@/components/threadnet/Chat";
 import { BottomNav } from "@/components/threadnet/BottomNav";
-import { PhoneSignup } from "@/components/threadnet/PhoneSignup";
-import { VerifyPin } from "@/components/threadnet/VerifyPin";
+import { EmailSignup } from "@/components/threadnet/EmailSignup";
 import { EditProfile } from "@/components/threadnet/EditProfile";
 import { MatchesScreen } from "@/components/threadnet/MatchesScreen";
 import { PROJECTS, type Project } from "@/components/threadnet/data";
 import { EMPTY_PROFILE, type ProfileData, type Screen } from "@/components/threadnet/types";
 import { Avatar } from "@/components/threadnet/Feed";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, MapPin, GraduationCap, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ThreadNet — Find your people. Build something real." },
-      { name: "description", content: "ThreadNet helps Menlo College students find co-founders and project collaborators." },
+      { name: "description", content: "ThreadNet helps students find co-founders and project collaborators." },
     ],
   }),
   component: App,
 });
 
-const phoneDigits = (p: string) => p.replace(/\D/g, "");
-const syntheticEmail = (digits: string) => `${digits}@phone.threadnet.app`;
-const syntheticPassword = (digits: string) => `tn-${digits}-prototype-secret`;
-
 function App() {
   const [screen, setScreen] = useState<Screen>("signup");
   const [activeProject, setActiveProject] = useState<Project>(PROJECTS[0]);
-  const [phone, setPhone] = useState("");
-  const [pin, setPin] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfileData>(EMPTY_PROFILE);
   const [authBusy, setAuthBusy] = useState(false);
   const [bootstrapping, setBootstrapping] = useState(true);
 
-  // Boot + auth listener
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       const uid = session?.user?.id ?? null;
@@ -59,14 +51,15 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Load profile when signed in
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
     (async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("display_name, majors, skills, interests, roles, onboarded")
+        .select(
+          "display_name, avatar_url, location, university, school_email, school_email_verified, majors, skills, interests, roles, onboarded",
+        )
         .eq("id", userId)
         .maybeSingle();
       if (cancelled) return;
@@ -78,6 +71,11 @@ function App() {
       const p: ProfileData = data
         ? {
             display_name: data.display_name,
+            avatar_url: data.avatar_url,
+            location: data.location,
+            university: data.university,
+            school_email: data.school_email,
+            school_email_verified: data.school_email_verified ?? false,
             majors: data.majors ?? [],
             skills: data.skills ?? [],
             interests: data.interests ?? [],
@@ -96,42 +94,24 @@ function App() {
 
   const showNav = ["feed", "matches", "match", "chat", "profile"].includes(screen);
 
-  const sendPin = (p: string, code: string) => {
-    setPhone(p);
-    setPin(code);
-    setScreen("verify");
-  };
-
-  const handleVerified = async () => {
-    const digits = phoneDigits(phone);
-    if (digits.length !== 10) return;
+  const handleEmailAuth = async (email: string, password: string) => {
     setAuthBusy(true);
-    const email = syntheticEmail(digits);
-    const password = syntheticPassword(digits);
-    // Try sign in first (returning user)
     const signIn = await supabase.auth.signInWithPassword({ email, password });
     if (signIn.error) {
-      // New user — sign up
       const signUp = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { phone: digits } },
+        options: { emailRedirectTo: window.location.origin },
       });
       if (signUp.error) {
-        toast.error(signUp.error.message);
         setAuthBusy(false);
-        setScreen("signup");
-        return;
+        throw new Error(signUp.error.message);
       }
     }
     setAuthBusy(false);
-    // onAuthStateChange will load profile and route
   };
 
-  const saveProfile = async (
-    patch: Partial<Pick<ProfileData, "display_name" | "majors" | "skills" | "interests" | "roles">>,
-    markOnboarded = false,
-  ) => {
+  const saveProfile = async (patch: Partial<ProfileData>, markOnboarded = false) => {
     if (!userId) return;
     const next: ProfileData = {
       ...profile,
@@ -142,6 +122,11 @@ function App() {
       .from("profiles")
       .update({
         display_name: next.display_name,
+        avatar_url: next.avatar_url,
+        location: next.location,
+        university: next.university,
+        school_email: next.school_email,
+        school_email_verified: next.school_email_verified,
         majors: next.majors,
         skills: next.skills,
         interests: next.interests,
@@ -171,20 +156,11 @@ function App() {
 
   return (
     <div className="mx-auto min-h-dvh max-w-md bg-background text-foreground">
-      {screen === "signup" && <PhoneSignup onSend={sendPin} />}
-
-      {screen === "verify" && (
-        <VerifyPin
-          phone={phone}
-          expectedPin={pin}
-          onBack={() => setScreen("signup")}
-          onVerified={handleVerified}
-          onResend={() => setPin(Math.floor(1000 + Math.random() * 9000).toString())}
-        />
-      )}
+      {screen === "signup" && <EmailSignup onSubmit={handleEmailAuth} busy={authBusy} />}
 
       {screen === "onboarding" && (
         <Onboarding
+          userId={userId}
           initial={profile}
           saving={authBusy}
           onComplete={async (data) => {
@@ -231,6 +207,7 @@ function App() {
 
       {screen === "edit" && (
         <EditProfile
+          userId={userId}
           initial={profile}
           saving={authBusy}
           onBack={() => setScreen("profile")}
@@ -291,9 +268,34 @@ function Profile({
       </div>
 
       <div className="mt-8 flex flex-col items-center text-center">
-        <Avatar initials={initials} size={96} />
+        {profile.avatar_url ? (
+          <img
+            src={profile.avatar_url}
+            alt=""
+            className="h-24 w-24 rounded-full border-2 object-cover"
+            style={{ borderColor: "var(--mint)" }}
+          />
+        ) : (
+          <Avatar initials={initials} size={96} />
+        )}
         <h2 className="mt-4 text-xl font-bold">{profile.display_name || "You"}</h2>
-        <p className="text-sm text-muted-foreground">Menlo College · {roleLabel}</p>
+        <p className="text-sm text-muted-foreground">{roleLabel}</p>
+
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          {profile.location && (
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="h-3.5 w-3.5" /> {profile.location}
+            </span>
+          )}
+          {profile.university && (
+            <span className="inline-flex items-center gap-1">
+              <GraduationCap className="h-3.5 w-3.5" /> {profile.university}
+              {profile.school_email_verified && (
+                <ShieldCheck className="h-3.5 w-3.5" style={{ color: "var(--mint)" }} />
+              )}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="mt-8 space-y-5">
