@@ -1,6 +1,5 @@
 export type Screen =
   | "signup"
-  | "verify"
   | "onboarding"
   | "feed"
   | "detail"
@@ -12,6 +11,11 @@ export type Screen =
 
 export type ProfileData = {
   display_name: string | null;
+  avatar_url: string | null;
+  location: string | null;
+  university: string | null;
+  school_email: string | null;
+  school_email_verified: boolean;
   majors: string[];
   skills: string[];
   interests: string[];
@@ -21,6 +25,11 @@ export type ProfileData = {
 
 export const EMPTY_PROFILE: ProfileData = {
   display_name: null,
+  avatar_url: null,
+  location: null,
+  university: null,
+  school_email: null,
+  school_email_verified: false,
   majors: [],
   skills: [],
   interests: [],
