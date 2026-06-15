@@ -16,39 +16,57 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           display_name: string | null
+          email: string | null
           id: string
           interests: string[]
+          location: string | null
           majors: string[]
           onboarded: boolean
           phone: string | null
           roles: string[]
+          school_email: string | null
+          school_email_verified: boolean
           skills: string[]
+          university: string | null
           updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id: string
           interests?: string[]
+          location?: string | null
           majors?: string[]
           onboarded?: boolean
           phone?: string | null
           roles?: string[]
+          school_email?: string | null
+          school_email_verified?: boolean
           skills?: string[]
+          university?: string | null
           updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id?: string
           interests?: string[]
+          location?: string | null
           majors?: string[]
           onboarded?: boolean
           phone?: string | null
           roles?: string[]
+          school_email?: string | null
+          school_email_verified?: boolean
           skills?: string[]
+          university?: string | null
           updated_at?: string
         }
         Relationships: []
