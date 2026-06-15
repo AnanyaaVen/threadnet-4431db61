@@ -92,7 +92,7 @@ export function EditProfile({
                 setSchoolVerified(false);
               }
             }}
-            placeholder="e.g. Menlo College"
+            placeholder="e.g. Stanford University"
           />
           {university.trim() && (
             <SchoolEmailBlock

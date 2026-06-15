@@ -117,7 +117,7 @@ export function Onboarding({
                 setUniversity(v);
                 setSchoolVerified(false);
               }}
-              placeholder="e.g. Menlo College"
+              placeholder="e.g. Stanford University"
             />
             {university.trim() && (
               <SchoolEmailBlock
