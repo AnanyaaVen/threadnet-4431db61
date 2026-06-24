@@ -1,11 +1,11 @@
 export type Screen =
   | "signup"
   | "onboarding"
-  | "feed"
-  | "detail"
-  | "match"
-  | "matches"
-  | "chat"
+  | "discover"
+  | "groups"
+  | "group"
+  | "ai"
+  | "rate"
   | "profile"
   | "edit";
 
