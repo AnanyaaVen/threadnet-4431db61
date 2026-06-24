@@ -1,11 +1,11 @@
-import { Home, MessageCircle, Sparkles, User } from "lucide-react";
+import { Home, Users, Sparkles, Star } from "lucide-react";
 import type { Screen } from "./types";
 
 const items: { id: Screen; label: string; icon: typeof Home }[] = [
-  { id: "feed", label: "Feed", icon: Home },
-  { id: "matches", label: "Matches", icon: Sparkles },
-  { id: "chat", label: "Chat", icon: MessageCircle },
-  { id: "profile", label: "Profile", icon: User },
+  { id: "discover", label: "Discover", icon: Home },
+  { id: "groups", label: "Groups", icon: Users },
+  { id: "ai", label: "AI Ideas", icon: Sparkles },
+  { id: "rate", label: "Rate It", icon: Star },
 ];
 
 export function BottomNav({
@@ -16,10 +16,16 @@ export function BottomNav({
   onNavigate: (s: Screen) => void;
 }) {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-card/95 px-2 pb-5 pt-2 backdrop-blur-md">
+    <nav
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-[430px] border-t px-2 pb-5 pt-2 backdrop-blur-md"
+      style={{
+        borderColor: "var(--border)",
+        backgroundColor: "color-mix(in oklab, var(--background) 92%, transparent)",
+      }}
+    >
       <div className="flex items-center justify-around">
         {items.map(({ id, label, icon: Icon }) => {
-          const isActive = active === id;
+          const isActive = active === id || (id === "groups" && active === "group");
           return (
             <button
               key={id}
