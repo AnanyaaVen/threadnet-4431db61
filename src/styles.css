@@ -38,9 +38,9 @@
 
 :root {
   --radius: 1rem;
-  /* Dark forest green app, white cards, beige accents, bright green CTAs */
-  --background: #1A3C2E;
-  --foreground: #F5F2E7;
+  /* White + beige app, white cards, green CTAs */
+  --background: #FFFFFF;
+  --foreground: #1A3C2E;
   --card: #FFFFFF;
   --card-foreground: #1A3C2E;
   --popover: #FFFFFF;
@@ -49,14 +49,14 @@
   --primary-foreground: #FFFFFF;
   --secondary: #F4EFE2;
   --secondary-foreground: #1A3C2E;
-  --muted: #244A38;
-  --muted-foreground: #B8C9BE;
+  --muted: #F4EFE2;
+  --muted-foreground: #6B7A72;
   --accent: #F4EFE2;
   --accent-foreground: #1A3C2E;
   --destructive: #E25A4A;
   --destructive-foreground: #FFFFFF;
-  --border: #2E5040;
-  --input: #F4EFE2;
+  --border: #E8E2D1;
+  --input: #FFFFFF;
   --ring: #2FAE66;
 
   --forest: #1A3C2E;
