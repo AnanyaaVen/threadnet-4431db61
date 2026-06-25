@@ -44,6 +44,7 @@ export function GroupsScreen({
           onSave(activeIdea);
           setActiveIdea(null);
         }}
+        onMessage={onMessage}
       />
     );
   }
