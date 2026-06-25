@@ -7,7 +7,8 @@ export type Screen =
   | "ai"
   | "rate"
   | "profile"
-  | "edit";
+  | "edit"
+  | "chat";
 
 export type ProfileData = {
   display_name: string | null;
