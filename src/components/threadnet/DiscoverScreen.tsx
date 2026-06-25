@@ -47,6 +47,7 @@ export function DiscoverScreen({
           onSave(active);
           setActive(null);
         }}
+        onMessage={onMessage}
       />
     );
   }
