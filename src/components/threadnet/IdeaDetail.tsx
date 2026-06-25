@@ -1,4 +1,4 @@
-import { ArrowLeft, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, MessageCircle, Sparkles, Users } from "lucide-react";
 import type { Idea, IdeaGroup } from "./ideasData";
 
 export function IdeaDetail({
@@ -7,12 +7,14 @@ export function IdeaDetail({
   onBack,
   onJoin,
   joined,
+  onMessage,
 }: {
   idea: Idea;
   group?: IdeaGroup;
   onBack: () => void;
   onJoin: () => void;
   joined: boolean;
+  onMessage?: (idea: Idea) => void;
 }) {
   return (
     <div className="flex min-h-dvh flex-col px-6 pb-10 pt-10">
