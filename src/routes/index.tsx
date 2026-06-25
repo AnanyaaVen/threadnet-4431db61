@@ -7,6 +7,7 @@ import { EmailSignup } from "@/components/threadnet/EmailSignup";
 import { EditProfile } from "@/components/threadnet/EditProfile";
 import { BottomNav } from "@/components/threadnet/BottomNav";
 import { DiscoverScreen } from "@/components/threadnet/DiscoverScreen";
+import { ChatScreen } from "@/components/threadnet/ChatScreen";
 import { GroupsScreen } from "@/components/threadnet/GroupsScreen";
 import { AIIdeasScreen } from "@/components/threadnet/AIIdeasScreen";
 import { RateItScreen } from "@/components/threadnet/RateItScreen";
