@@ -38,6 +38,12 @@ function App() {
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [joinedGroupIds, setJoinedGroupIds] = useState<string[]>([]);
   const [ratings, setRatings] = useState<IdeaRating[]>([]);
+  const [chatIdea, setChatIdea] = useState<Idea | null>(null);
+
+  const openChat = (idea: Idea) => {
+    setChatIdea(idea);
+    setScreen("chat");
+  };
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
