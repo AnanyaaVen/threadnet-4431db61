@@ -7,6 +7,7 @@ import { EmailSignup } from "@/components/threadnet/EmailSignup";
 import { EditProfile } from "@/components/threadnet/EditProfile";
 import { BottomNav } from "@/components/threadnet/BottomNav";
 import { DiscoverScreen } from "@/components/threadnet/DiscoverScreen";
+import { ChatScreen } from "@/components/threadnet/ChatScreen";
 import { GroupsScreen } from "@/components/threadnet/GroupsScreen";
 import { AIIdeasScreen } from "@/components/threadnet/AIIdeasScreen";
 import { RateItScreen } from "@/components/threadnet/RateItScreen";
@@ -37,6 +38,12 @@ function App() {
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [joinedGroupIds, setJoinedGroupIds] = useState<string[]>([]);
   const [ratings, setRatings] = useState<IdeaRating[]>([]);
+  const [chatIdea, setChatIdea] = useState<Idea | null>(null);
+
+  const openChat = (idea: Idea) => {
+    setChatIdea(idea);
+    setScreen("chat");
+  };
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -220,6 +227,7 @@ function App() {
           onSave={onSaveIdea}
           profile={profile}
           onOpenProfile={openProfile}
+          onMessage={openChat}
         />
       )}
 
@@ -233,7 +241,12 @@ function App() {
           onSave={onSaveIdea}
           profile={profile}
           onOpenProfile={openProfile}
+          onMessage={openChat}
         />
+      )}
+
+      {screen === "chat" && chatIdea && (
+        <ChatScreen idea={chatIdea} onBack={() => setScreen("discover")} />
       )}
 
       {screen === "ai" && (

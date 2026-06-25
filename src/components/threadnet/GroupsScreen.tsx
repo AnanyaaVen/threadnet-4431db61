@@ -15,6 +15,7 @@ export function GroupsScreen({
   onSave,
   profile,
   onOpenProfile,
+  onMessage,
 }: {
   ideas: Idea[];
   groups: IdeaGroup[];
@@ -24,6 +25,7 @@ export function GroupsScreen({
   onSave: (idea: Idea) => void;
   profile: ProfileData;
   onOpenProfile: () => void;
+  onMessage?: (idea: Idea) => void;
 }) {
   const [openGroup, setOpenGroup] = useState<IdeaGroup | null>(null);
   const [activeIdea, setActiveIdea] = useState<Idea | null>(null);
@@ -42,6 +44,7 @@ export function GroupsScreen({
           onSave(activeIdea);
           setActiveIdea(null);
         }}
+        onMessage={onMessage}
       />
     );
   }

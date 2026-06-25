@@ -1,4 +1,4 @@
-import { ArrowLeft, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, MessageCircle, Sparkles, Users } from "lucide-react";
 import type { Idea, IdeaGroup } from "./ideasData";
 
 export function IdeaDetail({
@@ -7,12 +7,14 @@ export function IdeaDetail({
   onBack,
   onJoin,
   joined,
+  onMessage,
 }: {
   idea: Idea;
   group?: IdeaGroup;
   onBack: () => void;
   onJoin: () => void;
   joined: boolean;
+  onMessage?: (idea: Idea) => void;
 }) {
   return (
     <div className="flex min-h-dvh flex-col px-6 pb-10 pt-10">
@@ -99,6 +101,17 @@ export function IdeaDetail({
       >
         {joined ? "✓ You're on the waitlist" : "Join This Project"}
       </button>
+
+      {onMessage && (
+        <button
+          onClick={() => onMessage(idea)}
+          className="mt-3 flex h-14 w-full items-center justify-center gap-2 rounded-2xl border text-base font-bold transition-all active:scale-[0.98]"
+          style={{ borderColor: "var(--border)", color: "var(--forest)", backgroundColor: "var(--card)" }}
+        >
+          <MessageCircle className="h-5 w-5" />
+          Message the team
+        </button>
+      )}
     </div>
   );
 }
