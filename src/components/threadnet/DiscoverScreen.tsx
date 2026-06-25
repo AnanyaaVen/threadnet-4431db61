@@ -15,6 +15,7 @@ export function DiscoverScreen({
   onSave,
   profile,
   onOpenProfile,
+  onMessage,
 }: {
   ideas: Idea[];
   groups: IdeaGroup[];
@@ -22,6 +23,7 @@ export function DiscoverScreen({
   onSave: (idea: Idea) => void;
   profile: ProfileData;
   onOpenProfile: () => void;
+  onMessage?: (idea: Idea) => void;
 }) {
   const [active, setActive] = useState<Idea | null>(null);
   const [showFilter, setShowFilter] = useState(false);
