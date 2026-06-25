@@ -227,6 +227,7 @@ function App() {
           onSave={onSaveIdea}
           profile={profile}
           onOpenProfile={openProfile}
+          onMessage={openChat}
         />
       )}
 
@@ -240,7 +241,12 @@ function App() {
           onSave={onSaveIdea}
           profile={profile}
           onOpenProfile={openProfile}
+          onMessage={openChat}
         />
+      )}
+
+      {screen === "chat" && chatIdea && (
+        <ChatScreen idea={chatIdea} onBack={() => setScreen("discover")} />
       )}
 
       {screen === "ai" && (
