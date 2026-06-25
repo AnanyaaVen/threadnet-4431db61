@@ -101,6 +101,17 @@ export function IdeaDetail({
       >
         {joined ? "✓ You're on the waitlist" : "Join This Project"}
       </button>
+
+      {onMessage && (
+        <button
+          onClick={() => onMessage(idea)}
+          className="mt-3 flex h-14 w-full items-center justify-center gap-2 rounded-2xl border text-base font-bold transition-all active:scale-[0.98]"
+          style={{ borderColor: "var(--border)", color: "var(--forest)", backgroundColor: "var(--card)" }}
+        >
+          <MessageCircle className="h-5 w-5" />
+          Message the team
+        </button>
+      )}
     </div>
   );
 }
