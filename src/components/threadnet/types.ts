@@ -8,7 +8,9 @@ export type Screen =
   | "rate"
   | "profile"
   | "edit"
-  | "chat";
+  | "chat"
+  | "matches"
+  | "matchChat";
 
 export type ProfileData = {
   display_name: string | null;
