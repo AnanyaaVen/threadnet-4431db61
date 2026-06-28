@@ -257,6 +257,14 @@ function App() {
         <ChatScreen idea={chatIdea} onBack={() => setScreen("discover")} />
       )}
 
+      {screen === "matches" && (
+        <MatchesScreen me={profile} currentUserId={userId} onMessage={openMatchChat} />
+      )}
+
+      {screen === "matchChat" && matchPerson && (
+        <MatchChatScreen person={matchPerson} onBack={() => setScreen("matches")} />
+      )}
+
       {screen === "ai" && (
         <AIIdeasScreen
           profile={profile}
