@@ -24,7 +24,7 @@ export function Onboarding({
   onComplete: (data: OnboardingPayload) => void;
   saving?: boolean;
 }) {
-  const TOTAL = 6;
+  const TOTAL = 7;
   const [step, setStep] = useState(0);
 
   const [displayName, setDisplayName] = useState(initial?.display_name ?? "");
@@ -33,6 +33,8 @@ export function Onboarding({
   const [university, setUniversity] = useState(initial?.university ?? "");
   const [schoolEmail, setSchoolEmail] = useState(initial?.school_email ?? "");
   const [schoolVerified, setSchoolVerified] = useState(initial?.school_email_verified ?? false);
+  const [bio, setBio] = useState(initial?.bio ?? "");
+  const [currentProject, setCurrentProject] = useState(initial?.current_project ?? "");
 
   const [majors, setMajors] = useState<string[]>(initial?.majors ?? []);
   const [skills, setSkills] = useState<string[]>(initial?.skills ?? []);
@@ -42,8 +44,6 @@ export function Onboarding({
   const toggle = (arr: string[], v: string, set: (v: string[]) => void) =>
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
-  // Step 1 (basics) requires display name. University optional.
-  // If a university is entered, school email must be entered & verified.
   const schoolOk = !university.trim() || (isSchoolEmail(schoolEmail) && schoolVerified);
   const canAdvance =
     (step === 0 && displayName.trim().length > 0) ||
@@ -51,7 +51,8 @@ export function Onboarding({
     (step === 2 && schoolOk) ||
     (step === 3 && majors.length > 0) ||
     (step === 4 && skills.length > 0) ||
-    (step === 5 && interests.length > 0 && roles.length > 0);
+    (step === 5 && interests.length > 0 && roles.length > 0) ||
+    (step === 6); // bio/project optional
 
   const progress = ((step + 1) / TOTAL) * 100;
 
@@ -63,6 +64,8 @@ export function Onboarding({
       university: university.trim() || null,
       school_email: university.trim() ? schoolEmail.trim().toLowerCase() : null,
       school_email_verified: university.trim() ? schoolVerified : false,
+      bio: bio.trim() || null,
+      current_project: currentProject.trim() || null,
       majors,
       skills,
       interests,
