@@ -11,7 +11,7 @@ const ROLES = [
   { value: "joiner", label: "I want to join a project", desc: "I'm looking for something exciting to help build." },
 ];
 
-type OnboardingPayload = Omit<ProfileData, "onboarded">;
+type OnboardingPayload = Omit<ProfileData, "onboarded" | "created_at">;
 
 export function Onboarding({
   userId,
