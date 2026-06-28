@@ -50,6 +50,8 @@ export function EditProfile({
   const [skills, setSkills] = useState<string[]>(initial.skills);
   const [interests, setInterests] = useState<string[]>(initial.interests);
   const [roles, setRoles] = useState<string[]>(initial.roles);
+  const [bio, setBio] = useState(initial.bio ?? "");
+  const [currentProject, setCurrentProject] = useState(initial.current_project ?? "");
 
   const toggle = (arr: string[], v: string, set: (v: string[]) => void) =>
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
