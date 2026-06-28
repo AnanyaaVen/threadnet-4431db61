@@ -321,6 +321,26 @@ function TextInput({
   );
 }
 
+function TextArea({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={3}
+      className="w-full resize-none rounded-2xl border-2 bg-card px-4 py-3 text-base font-medium leading-snug outline-none transition-all"
+      style={{ borderColor: value ? "var(--mint)" : "var(--border)" }}
+    />
+  );
+
 function ChipGrid({
   options,
   selected,
