@@ -198,7 +198,7 @@ function App() {
   const savedIdeas = useMemo(() => ideas.filter((i) => savedIds.includes(i.id)), [ideas, savedIds]);
   const joinedGroups = useMemo(() => groups.filter((g) => joinedGroupIds.includes(g.id)), [groups, joinedGroupIds]);
 
-  const showNav = ["discover", "groups", "group", "ai", "rate"].includes(screen);
+  const showNav = ["discover", "groups", "group", "ai", "rate", "matches"].includes(screen);
   const openProfile = () => setScreen("profile");
 
   if (bootstrapping && userId) {
