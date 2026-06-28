@@ -1,7 +1,8 @@
-import { ArrowLeft, LogOut, Settings, MapPin, GraduationCap, ShieldCheck } from "lucide-react";
+import { ArrowLeft, LogOut, Settings, MapPin, GraduationCap, ShieldCheck, BookOpen, Sparkles } from "lucide-react";
 import { Avatar } from "./Feed";
 import type { ProfileData } from "./types";
 import type { Idea, IdeaGroup, IdeaRating } from "./ideasData";
+import { joinedAgo } from "./time";
 
 export function ProfileScreen({
   profile,
