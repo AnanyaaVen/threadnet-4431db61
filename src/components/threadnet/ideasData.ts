@@ -184,7 +184,15 @@ export function mockGenerateIdeas(prompt: string, count = 3): Idea[] {
       skills: sample(SKILL_BANK, 2 + Math.floor(Math.random() * 2)),
       interested: Math.floor(Math.random() * 30) + 3,
       aiGenerated: true,
+      founderName: "ThreadNet AI",
+      founderInitials: "AI",
+      createdAt: Date.now(),
     };
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _legacy_close = () => {
   });
 }
 
