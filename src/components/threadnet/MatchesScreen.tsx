@@ -123,7 +123,7 @@ export function MatchesScreen({
           </div>
           <div className="space-y-3">
             {recommended.map(({ profile, score }) => (
-              <PersonCard key={profile.id} profile={profile} score={score} recommended />
+              <PersonCard key={profile.id} profile={profile} score={score} recommended onMessage={onMessage} />
             ))}
           </div>
         </section>
@@ -136,7 +136,7 @@ export function MatchesScreen({
           </h2>
           <div className="space-y-3">
             {others.map(({ profile, score }) => (
-              <PersonCard key={profile.id} profile={profile} score={score} />
+              <PersonCard key={profile.id} profile={profile} score={score} onMessage={onMessage} />
             ))}
           </div>
         </section>
@@ -149,10 +149,12 @@ function PersonCard({
   profile,
   score,
   recommended = false,
+  onMessage,
 }: {
   profile: OtherProfile;
   score: number;
   recommended?: boolean;
+  onMessage: (person: MatchPerson) => void;
 }) {
   const tags = [...profile.skills, ...profile.interests].slice(0, 4);
   return (
