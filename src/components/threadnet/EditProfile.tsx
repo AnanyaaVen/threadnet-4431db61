@@ -19,6 +19,8 @@ export type EditPayload = Pick<
   | "university"
   | "school_email"
   | "school_email_verified"
+  | "bio"
+  | "current_project"
   | "majors"
   | "skills"
   | "interests"
