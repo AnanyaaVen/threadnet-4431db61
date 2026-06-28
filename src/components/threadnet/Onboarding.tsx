@@ -340,6 +340,9 @@ function TextArea({
       style={{ borderColor: value ? "var(--mint)" : "var(--border)" }}
     />
   );
+}
+
+
 
 function ChipGrid({
   options,
