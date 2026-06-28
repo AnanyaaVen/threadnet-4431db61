@@ -46,9 +46,11 @@ function initialsOf(name: string | null) {
 export function MatchesScreen({
   me,
   currentUserId,
+  onMessage,
 }: {
   me: ProfileData;
   currentUserId: string | null;
+  onMessage: (person: MatchPerson) => void;
 }) {
   const [profiles, setProfiles] = useState<OtherProfile[] | null>(null);
   const [error, setError] = useState<string | null>(null);
