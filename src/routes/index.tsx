@@ -8,6 +8,8 @@ import { EditProfile } from "@/components/threadnet/EditProfile";
 import { BottomNav } from "@/components/threadnet/BottomNav";
 import { DiscoverScreen } from "@/components/threadnet/DiscoverScreen";
 import { ChatScreen } from "@/components/threadnet/ChatScreen";
+import { MatchesScreen } from "@/components/threadnet/MatchesScreen";
+import { MatchChatScreen, type MatchPerson } from "@/components/threadnet/MatchChatScreen";
 import { GroupsScreen } from "@/components/threadnet/GroupsScreen";
 import { AIIdeasScreen } from "@/components/threadnet/AIIdeasScreen";
 import { RateItScreen } from "@/components/threadnet/RateItScreen";
@@ -39,10 +41,16 @@ function App() {
   const [joinedGroupIds, setJoinedGroupIds] = useState<string[]>([]);
   const [ratings, setRatings] = useState<IdeaRating[]>([]);
   const [chatIdea, setChatIdea] = useState<Idea | null>(null);
+  const [matchPerson, setMatchPerson] = useState<MatchPerson | null>(null);
 
   const openChat = (idea: Idea) => {
     setChatIdea(idea);
     setScreen("chat");
+  };
+
+  const openMatchChat = (person: MatchPerson) => {
+    setMatchPerson(person);
+    setScreen("matchChat");
   };
 
   useEffect(() => {
@@ -190,7 +198,7 @@ function App() {
   const savedIdeas = useMemo(() => ideas.filter((i) => savedIds.includes(i.id)), [ideas, savedIds]);
   const joinedGroups = useMemo(() => groups.filter((g) => joinedGroupIds.includes(g.id)), [groups, joinedGroupIds]);
 
-  const showNav = ["discover", "groups", "group", "ai", "rate"].includes(screen);
+  const showNav = ["discover", "groups", "group", "ai", "rate", "matches"].includes(screen);
   const openProfile = () => setScreen("profile");
 
   if (bootstrapping && userId) {
@@ -247,6 +255,14 @@ function App() {
 
       {screen === "chat" && chatIdea && (
         <ChatScreen idea={chatIdea} onBack={() => setScreen("discover")} />
+      )}
+
+      {screen === "matches" && (
+        <MatchesScreen me={profile} currentUserId={userId} onMessage={openMatchChat} />
+      )}
+
+      {screen === "matchChat" && matchPerson && (
+        <MatchChatScreen person={matchPerson} onBack={() => setScreen("matches")} />
       )}
 
       {screen === "ai" && (
