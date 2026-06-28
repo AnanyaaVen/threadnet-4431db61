@@ -262,7 +262,11 @@ function App() {
       )}
 
       {screen === "matchChat" && matchPerson && (
-        <MatchChatScreen person={matchPerson} onBack={() => setScreen("matches")} />
+        <MatchChatScreen
+          person={matchPerson}
+          currentUserId={userId}
+          onBack={() => setScreen("matches")}
+        />
       )}
 
       {screen === "ai" && (

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Send } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export type MatchPerson = {
   id: string;
@@ -9,47 +11,111 @@ export type MatchPerson = {
   topTag?: string;
 };
 
-type Msg = { id: string; from: "me" | "them"; text: string };
+type Msg = {
+  id: string;
+  sender_id: string;
+  recipient_id: string;
+  body: string;
+  created_at: string;
+};
 
 export function MatchChatScreen({
   person,
+  currentUserId,
   onBack,
 }: {
   person: MatchPerson;
+  currentUserId: string | null;
   onBack: () => void;
 }) {
-  const [messages, setMessages] = useState<Msg[]>([
-    { id: "1", from: "them", text: `Hey! We matched 🎉` },
-    {
-      id: "2",
-      from: "them",
-      text: person.topTag
-        ? `Saw we both vibe with ${person.topTag} — what are you working on?`
-        : `What are you building these days?`,
-    },
-  ]);
+  const [messages, setMessages] = useState<Msg[]>([]);
   const [draft, setDraft] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Load history + subscribe to realtime updates between me and `person`
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    if (!currentUserId) return;
+    let cancelled = false;
+
+    (async () => {
+      const { data, error } = await supabase
+        .from("direct_messages")
+        .select("id, sender_id, recipient_id, body, created_at")
+        .or(
+          `and(sender_id.eq.${currentUserId},recipient_id.eq.${person.id}),and(sender_id.eq.${person.id},recipient_id.eq.${currentUserId})`,
+        )
+        .order("created_at", { ascending: true });
+      if (cancelled) return;
+      if (error) {
+        toast.error("Couldn't load messages");
+      } else {
+        setMessages((data ?? []) as Msg[]);
+      }
+      setLoading(false);
+    })();
+
+    const channel = supabase
+      .channel(`dm:${currentUserId}:${person.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "direct_messages",
+        },
+        (payload) => {
+          const m = payload.new as Msg;
+          const involvesPair =
+            (m.sender_id === currentUserId && m.recipient_id === person.id) ||
+            (m.sender_id === person.id && m.recipient_id === currentUserId);
+          if (!involvesPair) return;
+          setMessages((prev) =>
+            prev.some((x) => x.id === m.id) ? prev : [...prev, m],
+          );
+        },
+      )
+      .subscribe();
+
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
+  }, [currentUserId, person.id]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages.length]);
 
-  const send = () => {
+  const send = async () => {
     const text = draft.trim();
-    if (!text) return;
-    setMessages((m) => [...m, { id: String(Date.now()), from: "me", text }]);
+    if (!text || !currentUserId || sending) return;
+    setSending(true);
     setDraft("");
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
-        {
-          id: String(Date.now() + 1),
-          from: "them",
-          text: "Love that. Wanna hop on a quick call this week?",
-        },
-      ]);
-    }, 1100);
+    const { data, error } = await supabase
+      .from("direct_messages")
+      .insert({
+        sender_id: currentUserId,
+        recipient_id: person.id,
+        body: text,
+      })
+      .select("id, sender_id, recipient_id, body, created_at")
+      .single();
+    setSending(false);
+    if (error) {
+      toast.error(error.message);
+      setDraft(text);
+      return;
+    }
+    if (data) {
+      setMessages((prev) =>
+        prev.some((x) => x.id === data.id) ? prev : [...prev, data as Msg],
+      );
+    }
   };
 
   return (
@@ -91,9 +157,17 @@ export function MatchChatScreen({
         <div className="mb-3 text-center text-[11px] uppercase tracking-wider text-muted-foreground">
           You matched · say hi
         </div>
+        {loading && (
+          <p className="text-center text-xs text-muted-foreground">Loading…</p>
+        )}
+        {!loading && messages.length === 0 && (
+          <p className="text-center text-xs text-muted-foreground">
+            No messages yet. Send the first one!
+          </p>
+        )}
         {messages.map((m) => (
-          <Bubble key={m.id} from={m.from}>
-            {m.text}
+          <Bubble key={m.id} from={m.sender_id === currentUserId ? "me" : "them"}>
+            {m.body}
           </Bubble>
         ))}
       </div>
@@ -111,7 +185,7 @@ export function MatchChatScreen({
           </div>
           <button
             onClick={send}
-            disabled={!draft.trim()}
+            disabled={!draft.trim() || sending}
             className="flex h-11 w-11 items-center justify-center rounded-full bg-primary transition active:scale-90 disabled:opacity-40"
             aria-label="Send"
           >
