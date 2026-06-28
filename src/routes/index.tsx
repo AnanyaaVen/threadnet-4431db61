@@ -170,7 +170,7 @@ function App() {
   const onSaveIdea = (idea: Idea) => {
     setSavedIds((arr) => (arr.includes(idea.id) ? arr : [...arr, idea.id]));
     setIdeas((all) => all.map((i) => (i.id === idea.id ? { ...i, interested: i.interested + 1 } : i)));
-    toast.success(`Joined "${idea.title}" waitlist`);
+    toast.success(`You and ${idea.founderName} are now connected! Say hello 👋`);
   };
 
   const onToggleJoinGroup = (groupId: string) => {
