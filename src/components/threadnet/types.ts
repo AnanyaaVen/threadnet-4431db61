@@ -25,7 +25,6 @@ export type ProfileData = {
   skills: string[];
   interests: string[];
   roles: string[];
-  current_project: string | null;
   created_at: string | null;
   onboarded: boolean;
 };
@@ -43,5 +42,6 @@ export const EMPTY_PROFILE: ProfileData = {
   skills: [],
   interests: [],
   roles: [],
+  created_at: null,
   onboarded: false,
 };
