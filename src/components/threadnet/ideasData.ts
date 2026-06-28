@@ -191,10 +191,6 @@ export function mockGenerateIdeas(prompt: string, count = 3): Idea[] {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _legacy_close = () => {
-  });
-}
 
 export type IdeaRating = {
   id: string;
