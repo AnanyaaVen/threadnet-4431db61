@@ -198,7 +198,7 @@ export function Onboarding({
         }}
         className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-base font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-40"
       >
-        {step === TOTAL - 1 ? (saving ? "Saving…" : "Enter ThreadNet") : "Continue"}
+        {step === TOTAL - 1 ? (saving ? "Saving…" : "Let's go 🚀") : "Continue"}
         {!saving && <ArrowRight className="h-5 w-5" />}
       </button>
     </div>
