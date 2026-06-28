@@ -77,7 +77,7 @@ function App() {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "display_name, avatar_url, location, university, school_email, school_email_verified, bio, current_project, majors, skills, interests, roles, onboarded",
+          "display_name, avatar_url, location, university, school_email, school_email_verified, bio, current_project, majors, skills, interests, roles, created_at, onboarded",
         )
         .eq("id", userId)
         .maybeSingle();
@@ -101,6 +101,7 @@ function App() {
             skills: data.skills ?? [],
             interests: data.interests ?? [],
             roles: data.roles ?? [],
+            created_at: (data as { created_at?: string | null }).created_at ?? null,
             onboarded: data.onboarded,
           }
         : EMPTY_PROFILE;
