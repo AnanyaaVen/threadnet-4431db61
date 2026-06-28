@@ -80,9 +80,22 @@ export function EditProfile({
           <Input value={name} onChange={setName} placeholder="Your name" />
         </Section>
 
+        <Section label="Short bio">
+          <TextArea value={bio} onChange={setBio} placeholder="Two sentences your future co-founder should read." />
+        </Section>
+
+        <Section label="What are you working on?">
+          <TextArea
+            value={currentProject}
+            onChange={setCurrentProject}
+            placeholder="A weekend project, a side hustle, a class idea you can't shake…"
+          />
+        </Section>
+
         <Section label="Location">
           <Input value={location} onChange={setLocation} placeholder="City or country" />
         </Section>
+
 
         <Section label="University (optional)">
           <Input
