@@ -88,7 +88,7 @@ export function Onboarding({
 
       <div key={step} className="flex-1 animate-slide-up">
         {step === 0 && (
-          <Step title="Let's set up your profile" sub="A name and a photo so collaborators recognize you.">
+          <Step title="Hey 👋 what should we call you?" sub="Pop in a name and a pic so people recognize you in the feed.">
             <div className="flex flex-col items-center">
               <AvatarUpload
                 userId={userId}
@@ -98,21 +98,21 @@ export function Onboarding({
               />
             </div>
             <div className="mt-6">
-              <Label>Display name</Label>
-              <TextInput value={displayName} onChange={setDisplayName} placeholder="Your name" />
+              <Label>Your name</Label>
+              <TextInput value={displayName} onChange={setDisplayName} placeholder="e.g. Maya Chen" />
             </div>
           </Step>
         )}
 
         {step === 1 && (
-          <Step title="Where are you based?" sub="City or country — helps surface local collaborators.">
-            <Label>Location</Label>
+          <Step title="Where in the world are you?" sub="Helps us surface folks you could grab coffee with.">
+            <Label>City or country</Label>
             <TextInput value={location} onChange={setLocation} placeholder="San Francisco, CA" />
           </Step>
         )}
 
         {step === 2 && (
-          <Step title="College or university" sub="Optional. If you add one, verify with your school email.">
+          <Step title="Where do you study?" sub="Optional — but verifying your school email gets you a ✓ on your profile.">
             <Label>University</Label>
             <TextInput
               value={university}
@@ -143,17 +143,17 @@ export function Onboarding({
         )}
 
         {step === 4 && (
-          <Step title="What can you bring?" sub="Pick everything you're decent at — humility optional.">
+          <Step title="What can you bring to a team?" sub="Pick everything you're decent at — humility optional.">
             <ChipGrid options={SKILLS} selected={skills} onToggle={(v) => toggle(skills, v, setSkills)} />
           </Step>
         )}
 
         {step === 5 && (
-          <Step title="Interests & role" sub="Pick what excites you and where you fit.">
+          <Step title="What gets you excited?" sub="Pick a few spaces you'd love to build in, and where you fit on a team.">
             <Label>Interests</Label>
             <ChipGrid options={INTERESTS} selected={interests} onToggle={(v) => toggle(interests, v, setInterests)} />
             <div className="mt-6">
-              <Label>Role</Label>
+              <Label>I'm here as a…</Label>
               <div className="grid gap-3">
                 {ROLES.map((r) => (
                   <RoleCard
@@ -168,7 +168,27 @@ export function Onboarding({
             </div>
           </Step>
         )}
+
+        {step === 6 && (
+          <Step title="Tell us about you" sub="Find your people. Build something real.">
+            <Label>What are you working on?</Label>
+            <TextArea
+              value={currentProject}
+              onChange={setCurrentProject}
+              placeholder="A weekend project, a side hustle, a class idea you can't shake…"
+            />
+            <div className="mt-5">
+              <Label>A quick intro (optional)</Label>
+              <TextArea
+                value={bio}
+                onChange={setBio}
+                placeholder="Two sentences your future co-founder should read."
+              />
+            </div>
+          </Step>
+        )}
       </div>
+
 
       <button
         disabled={!canAdvance || saving}
