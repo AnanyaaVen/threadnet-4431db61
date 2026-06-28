@@ -292,6 +292,9 @@ function TextArea({ value, onChange, placeholder }: { value: string; onChange: (
       style={{ borderColor: value ? "var(--mint)" : "var(--border)" }}
     />
   );
+}
+
+
 
 function Chips({ options, selected, onToggle }: { options: string[]; selected: string[]; onToggle: (v: string) => void }) {
   return (
