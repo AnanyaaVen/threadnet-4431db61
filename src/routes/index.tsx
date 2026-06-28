@@ -77,7 +77,7 @@ function App() {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "display_name, avatar_url, location, university, school_email, school_email_verified, majors, skills, interests, roles, onboarded",
+          "display_name, avatar_url, location, university, school_email, school_email_verified, bio, current_project, majors, skills, interests, roles, onboarded",
         )
         .eq("id", userId)
         .maybeSingle();
@@ -95,6 +95,8 @@ function App() {
             university: data.university,
             school_email: data.school_email,
             school_email_verified: data.school_email_verified ?? false,
+            bio: data.bio ?? null,
+            current_project: data.current_project ?? null,
             majors: data.majors ?? [],
             skills: data.skills ?? [],
             interests: data.interests ?? [],
@@ -144,6 +146,8 @@ function App() {
         university: next.university,
         school_email: next.school_email,
         school_email_verified: next.school_email_verified,
+        bio: next.bio,
+        current_project: next.current_project,
         majors: next.majors,
         skills: next.skills,
         interests: next.interests,
@@ -156,7 +160,7 @@ function App() {
       return;
     }
     setProfile(next);
-    toast.success(markOnboarded ? "Welcome to ThreadNet" : "Profile saved");
+    toast.success(markOnboarded ? "Welcome to ThreadNet 👋" : "Profile saved");
   };
 
   const signOut = async () => {
