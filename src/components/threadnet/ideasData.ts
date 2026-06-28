@@ -17,6 +17,10 @@ export type Idea = {
   interested: number;
   aiGenerated?: boolean;
   groupId?: string;
+  founderName: string;
+  founderUniversity?: string;
+  founderInitials: string;
+  createdAt: number;
 };
 
 export type IdeaGroup = {
