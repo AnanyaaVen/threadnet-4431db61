@@ -158,6 +158,8 @@ export function EditProfile({
             university: university.trim() || null,
             school_email: university.trim() ? schoolEmail.trim().toLowerCase() : null,
             school_email_verified: university.trim() ? schoolVerified : false,
+            bio: bio.trim() || null,
+            current_project: currentProject.trim() || null,
             majors,
             skills,
             interests,
