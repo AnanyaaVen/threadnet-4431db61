@@ -52,6 +52,8 @@ export function RateItScreen({
         rating={result}
         onReset={reset}
         onPost={() => {
+          const founderName = profile.display_name || "You";
+          const founderInitials = founderName.split(/\s+/).map((s) => s[0]).filter(Boolean).join("").slice(0, 3).toUpperCase();
           const i: Idea = {
             id: `posted_${result.id}`,
             title: result.name,
@@ -59,6 +61,10 @@ export function RateItScreen({
             category: result.category,
             skills: ["Founder", "Builder"],
             interested: 1,
+            founderName,
+            founderUniversity: profile.university ?? undefined,
+            founderInitials,
+            createdAt: Date.now(),
           };
           onPostToDiscover(i);
         }}

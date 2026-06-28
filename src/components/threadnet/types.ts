@@ -19,10 +19,13 @@ export type ProfileData = {
   university: string | null;
   school_email: string | null;
   school_email_verified: boolean;
+  bio: string | null;
+  current_project: string | null;
   majors: string[];
   skills: string[];
   interests: string[];
   roles: string[];
+  created_at: string | null;
   onboarded: boolean;
 };
 
@@ -33,9 +36,12 @@ export const EMPTY_PROFILE: ProfileData = {
   university: null,
   school_email: null,
   school_email_verified: false,
+  bio: null,
+  current_project: null,
   majors: [],
   skills: [],
   interests: [],
   roles: [],
+  created_at: null,
   onboarded: false,
 };

@@ -19,6 +19,8 @@ export type EditPayload = Pick<
   | "university"
   | "school_email"
   | "school_email_verified"
+  | "bio"
+  | "current_project"
   | "majors"
   | "skills"
   | "interests"
@@ -48,6 +50,8 @@ export function EditProfile({
   const [skills, setSkills] = useState<string[]>(initial.skills);
   const [interests, setInterests] = useState<string[]>(initial.interests);
   const [roles, setRoles] = useState<string[]>(initial.roles);
+  const [bio, setBio] = useState(initial.bio ?? "");
+  const [currentProject, setCurrentProject] = useState(initial.current_project ?? "");
 
   const toggle = (arr: string[], v: string, set: (v: string[]) => void) =>
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
@@ -76,9 +80,22 @@ export function EditProfile({
           <Input value={name} onChange={setName} placeholder="Your name" />
         </Section>
 
+        <Section label="Short bio">
+          <TextArea value={bio} onChange={setBio} placeholder="Two sentences your future co-founder should read." />
+        </Section>
+
+        <Section label="What are you working on?">
+          <TextArea
+            value={currentProject}
+            onChange={setCurrentProject}
+            placeholder="A weekend project, a side hustle, a class idea you can't shake…"
+          />
+        </Section>
+
         <Section label="Location">
           <Input value={location} onChange={setLocation} placeholder="City or country" />
         </Section>
+
 
         <Section label="University (optional)">
           <Input
@@ -141,6 +158,8 @@ export function EditProfile({
             university: university.trim() || null,
             school_email: university.trim() ? schoolEmail.trim().toLowerCase() : null,
             school_email_verified: university.trim() ? schoolVerified : false,
+            bio: bio.trim() || null,
+            current_project: currentProject.trim() || null,
             majors,
             skills,
             interests,
@@ -262,6 +281,21 @@ function Input({
   );
 }
 
+function TextArea({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={3}
+      className="w-full resize-none rounded-2xl border-2 bg-card px-4 py-3 text-base font-medium leading-snug outline-none transition-all"
+      style={{ borderColor: value ? "var(--mint)" : "var(--border)" }}
+    />
+  );
+}
+
+
+
 function Chips({ options, selected, onToggle }: { options: string[]; selected: string[]; onToggle: (v: string) => void }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -286,3 +320,4 @@ function Chips({ options, selected, onToggle }: { options: string[]; selected: s
     </div>
   );
 }
+

@@ -11,7 +11,7 @@ const ROLES = [
   { value: "joiner", label: "I want to join a project", desc: "I'm looking for something exciting to help build." },
 ];
 
-type OnboardingPayload = Omit<ProfileData, "onboarded">;
+type OnboardingPayload = Omit<ProfileData, "onboarded" | "created_at">;
 
 export function Onboarding({
   userId,
@@ -24,7 +24,7 @@ export function Onboarding({
   onComplete: (data: OnboardingPayload) => void;
   saving?: boolean;
 }) {
-  const TOTAL = 6;
+  const TOTAL = 7;
   const [step, setStep] = useState(0);
 
   const [displayName, setDisplayName] = useState(initial?.display_name ?? "");
@@ -33,6 +33,8 @@ export function Onboarding({
   const [university, setUniversity] = useState(initial?.university ?? "");
   const [schoolEmail, setSchoolEmail] = useState(initial?.school_email ?? "");
   const [schoolVerified, setSchoolVerified] = useState(initial?.school_email_verified ?? false);
+  const [bio, setBio] = useState(initial?.bio ?? "");
+  const [currentProject, setCurrentProject] = useState(initial?.current_project ?? "");
 
   const [majors, setMajors] = useState<string[]>(initial?.majors ?? []);
   const [skills, setSkills] = useState<string[]>(initial?.skills ?? []);
@@ -42,8 +44,6 @@ export function Onboarding({
   const toggle = (arr: string[], v: string, set: (v: string[]) => void) =>
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
-  // Step 1 (basics) requires display name. University optional.
-  // If a university is entered, school email must be entered & verified.
   const schoolOk = !university.trim() || (isSchoolEmail(schoolEmail) && schoolVerified);
   const canAdvance =
     (step === 0 && displayName.trim().length > 0) ||
@@ -51,7 +51,8 @@ export function Onboarding({
     (step === 2 && schoolOk) ||
     (step === 3 && majors.length > 0) ||
     (step === 4 && skills.length > 0) ||
-    (step === 5 && interests.length > 0 && roles.length > 0);
+    (step === 5 && interests.length > 0 && roles.length > 0) ||
+    (step === 6); // bio/project optional
 
   const progress = ((step + 1) / TOTAL) * 100;
 
@@ -63,6 +64,8 @@ export function Onboarding({
       university: university.trim() || null,
       school_email: university.trim() ? schoolEmail.trim().toLowerCase() : null,
       school_email_verified: university.trim() ? schoolVerified : false,
+      bio: bio.trim() || null,
+      current_project: currentProject.trim() || null,
       majors,
       skills,
       interests,
@@ -85,7 +88,7 @@ export function Onboarding({
 
       <div key={step} className="flex-1 animate-slide-up">
         {step === 0 && (
-          <Step title="Let's set up your profile" sub="A name and a photo so collaborators recognize you.">
+          <Step title="Hey 👋 what should we call you?" sub="Pop in a name and a pic so people recognize you in the feed.">
             <div className="flex flex-col items-center">
               <AvatarUpload
                 userId={userId}
@@ -95,21 +98,21 @@ export function Onboarding({
               />
             </div>
             <div className="mt-6">
-              <Label>Display name</Label>
-              <TextInput value={displayName} onChange={setDisplayName} placeholder="Your name" />
+              <Label>Your name</Label>
+              <TextInput value={displayName} onChange={setDisplayName} placeholder="e.g. Maya Chen" />
             </div>
           </Step>
         )}
 
         {step === 1 && (
-          <Step title="Where are you based?" sub="City or country — helps surface local collaborators.">
-            <Label>Location</Label>
+          <Step title="Where in the world are you?" sub="Helps us surface folks you could grab coffee with.">
+            <Label>City or country</Label>
             <TextInput value={location} onChange={setLocation} placeholder="San Francisco, CA" />
           </Step>
         )}
 
         {step === 2 && (
-          <Step title="College or university" sub="Optional. If you add one, verify with your school email.">
+          <Step title="Where do you study?" sub="Optional — but verifying your school email gets you a ✓ on your profile.">
             <Label>University</Label>
             <TextInput
               value={university}
@@ -140,17 +143,17 @@ export function Onboarding({
         )}
 
         {step === 4 && (
-          <Step title="What can you bring?" sub="Pick everything you're decent at — humility optional.">
+          <Step title="What can you bring to a team?" sub="Pick everything you're decent at — humility optional.">
             <ChipGrid options={SKILLS} selected={skills} onToggle={(v) => toggle(skills, v, setSkills)} />
           </Step>
         )}
 
         {step === 5 && (
-          <Step title="Interests & role" sub="Pick what excites you and where you fit.">
+          <Step title="What gets you excited?" sub="Pick a few spaces you'd love to build in, and where you fit on a team.">
             <Label>Interests</Label>
             <ChipGrid options={INTERESTS} selected={interests} onToggle={(v) => toggle(interests, v, setInterests)} />
             <div className="mt-6">
-              <Label>Role</Label>
+              <Label>I'm here as a…</Label>
               <div className="grid gap-3">
                 {ROLES.map((r) => (
                   <RoleCard
@@ -165,7 +168,27 @@ export function Onboarding({
             </div>
           </Step>
         )}
+
+        {step === 6 && (
+          <Step title="Tell us about you" sub="Find your people. Build something real.">
+            <Label>What are you working on?</Label>
+            <TextArea
+              value={currentProject}
+              onChange={setCurrentProject}
+              placeholder="A weekend project, a side hustle, a class idea you can't shake…"
+            />
+            <div className="mt-5">
+              <Label>A quick intro (optional)</Label>
+              <TextArea
+                value={bio}
+                onChange={setBio}
+                placeholder="Two sentences your future co-founder should read."
+              />
+            </div>
+          </Step>
+        )}
       </div>
+
 
       <button
         disabled={!canAdvance || saving}
@@ -175,7 +198,7 @@ export function Onboarding({
         }}
         className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-base font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all active:scale-[0.98] disabled:opacity-40"
       >
-        {step === TOTAL - 1 ? (saving ? "Saving…" : "Enter ThreadNet") : "Continue"}
+        {step === TOTAL - 1 ? (saving ? "Saving…" : "Let's go 🚀") : "Continue"}
         {!saving && <ArrowRight className="h-5 w-5" />}
       </button>
     </div>
@@ -298,6 +321,29 @@ function TextInput({
   );
 }
 
+function TextArea({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={3}
+      className="w-full resize-none rounded-2xl border-2 bg-card px-4 py-3 text-base font-medium leading-snug outline-none transition-all"
+      style={{ borderColor: value ? "var(--mint)" : "var(--border)" }}
+    />
+  );
+}
+
+
+
 function ChipGrid({
   options,
   selected,
@@ -367,3 +413,4 @@ function RoleCard({
     </button>
   );
 }
+

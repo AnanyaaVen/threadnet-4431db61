@@ -17,6 +17,10 @@ export type Idea = {
   interested: number;
   aiGenerated?: boolean;
   groupId?: string;
+  founderName: string;
+  founderUniversity?: string;
+  founderInitials: string;
+  createdAt: number;
 };
 
 export type IdeaGroup = {
@@ -26,6 +30,9 @@ export type IdeaGroup = {
   students: number;
   ideaIds: string[];
 };
+
+const HOUR = 1000 * 60 * 60;
+const DAY = HOUR * 24;
 
 export const SEED_IDEAS: Idea[] = [
   {
@@ -37,6 +44,10 @@ export const SEED_IDEAS: Idea[] = [
     interested: 42,
     aiGenerated: true,
     groupId: "g_ai",
+    founderName: "Maya Chen",
+    founderUniversity: "Stanford University",
+    founderInitials: "MC",
+    createdAt: Date.now() - 2 * HOUR,
   },
   {
     id: "i2",
@@ -46,6 +57,10 @@ export const SEED_IDEAS: Idea[] = [
     skills: ["Backend Dev", "Operations"],
     interested: 27,
     groupId: "g_social",
+    founderName: "Jordan Patel",
+    founderUniversity: "UC Berkeley",
+    founderInitials: "JP",
+    createdAt: Date.now() - 6 * HOUR,
   },
   {
     id: "i3",
@@ -55,6 +70,10 @@ export const SEED_IDEAS: Idea[] = [
     skills: ["UI Designer", "Product"],
     interested: 18,
     groupId: "g_market",
+    founderName: "Sofia Alvarez",
+    founderUniversity: "NYU Stern",
+    founderInitials: "SA",
+    createdAt: Date.now() - 1 * DAY,
   },
   {
     id: "i4",
@@ -65,6 +84,10 @@ export const SEED_IDEAS: Idea[] = [
     interested: 35,
     aiGenerated: true,
     groupId: "g_ai",
+    founderName: "Riya Kapoor",
+    founderUniversity: "UCLA",
+    founderInitials: "RK",
+    createdAt: Date.now() - 3 * DAY,
   },
   {
     id: "i5",
@@ -74,6 +97,10 @@ export const SEED_IDEAS: Idea[] = [
     skills: ["React Dev", "Marketing"],
     interested: 21,
     groupId: "g_market",
+    founderName: "Devon Brooks",
+    founderUniversity: "Menlo College",
+    founderInitials: "DB",
+    createdAt: Date.now() - 5 * DAY,
   },
   {
     id: "i6",
@@ -83,6 +110,10 @@ export const SEED_IDEAS: Idea[] = [
     skills: ["EE", "Firmware", "Designer"],
     interested: 12,
     groupId: "g_social",
+    founderName: "Aisha Rahman",
+    founderUniversity: "MIT",
+    founderInitials: "AR",
+    createdAt: Date.now() - 8 * DAY,
   },
   {
     id: "i7",
@@ -92,6 +123,10 @@ export const SEED_IDEAS: Idea[] = [
     skills: ["Backend Dev", "Growth"],
     interested: 9,
     groupId: "g_edu",
+    founderName: "Liam O'Connor",
+    founderUniversity: "USC",
+    founderInitials: "LO",
+    createdAt: Date.now() - 14 * DAY,
   },
 ];
 
@@ -149,9 +184,13 @@ export function mockGenerateIdeas(prompt: string, count = 3): Idea[] {
       skills: sample(SKILL_BANK, 2 + Math.floor(Math.random() * 2)),
       interested: Math.floor(Math.random() * 30) + 3,
       aiGenerated: true,
+      founderName: "ThreadNet AI",
+      founderInitials: "AI",
+      createdAt: Date.now(),
     };
   });
 }
+
 
 export type IdeaRating = {
   id: string;
