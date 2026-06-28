@@ -41,10 +41,16 @@ function App() {
   const [joinedGroupIds, setJoinedGroupIds] = useState<string[]>([]);
   const [ratings, setRatings] = useState<IdeaRating[]>([]);
   const [chatIdea, setChatIdea] = useState<Idea | null>(null);
+  const [matchPerson, setMatchPerson] = useState<MatchPerson | null>(null);
 
   const openChat = (idea: Idea) => {
     setChatIdea(idea);
     setScreen("chat");
+  };
+
+  const openMatchChat = (person: MatchPerson) => {
+    setMatchPerson(person);
+    setScreen("matchChat");
   };
 
   useEffect(() => {
