@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      connections: {
+        Row: {
+          created_at: string
+          from_user_id: string
+          id: string
+          project_id: string | null
+          status: string
+          to_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          from_user_id: string
+          id?: string
+          project_id?: string | null
+          status?: string
+          to_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          from_user_id?: string
+          id?: string
+          project_id?: string | null
+          status?: string
+          to_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connections_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       direct_messages: {
         Row: {
           body: string
@@ -92,6 +130,54 @@ export type Database = {
           skills?: string[]
           university?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          category: string | null
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          founder_id: string
+          hook: string | null
+          id: string
+          needs: string[]
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          vision: string | null
+        }
+        Insert: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          founder_id: string
+          hook?: string | null
+          id?: string
+          needs?: string[]
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          vision?: string | null
+        }
+        Update: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          founder_id?: string
+          hook?: string | null
+          id?: string
+          needs?: string[]
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          vision?: string | null
         }
         Relationships: []
       }
