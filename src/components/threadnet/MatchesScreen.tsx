@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar } from "./Feed";
 import type { ProfileData } from "./types";
+import type { MatchPerson } from "./MatchChatScreen";
 
 type OtherProfile = {
   id: string;
