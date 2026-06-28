@@ -189,17 +189,35 @@ function PersonCard({
           </div>
         )}
       </div>
-      <div
-        className="flex shrink-0 flex-col items-center rounded-xl px-3 py-1.5"
-        style={{
-          backgroundColor: recommended
-            ? "color-mix(in oklab, var(--mint) 18%, transparent)"
-            : "var(--secondary)",
-          color: recommended ? "var(--mint)" : "var(--muted-foreground)",
-        }}
-      >
-        <span className="text-base font-extrabold leading-none">{score}%</span>
-        <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider">match</span>
+      <div className="flex shrink-0 flex-col items-end gap-2">
+        <div
+          className="flex flex-col items-center rounded-xl px-3 py-1.5"
+          style={{
+            backgroundColor: recommended
+              ? "color-mix(in oklab, var(--mint) 18%, transparent)"
+              : "var(--secondary)",
+            color: recommended ? "var(--mint)" : "var(--muted-foreground)",
+          }}
+        >
+          <span className="text-base font-extrabold leading-none">{score}%</span>
+          <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-wider">match</span>
+        </div>
+        <button
+          onClick={() =>
+            onMessage({
+              id: profile.id,
+              name: profile.display_name || "ThreadNet user",
+              initials: initialsOf(profile.display_name),
+              score,
+              topTag: tags[0],
+            })
+          }
+          className="flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold text-primary-foreground active:scale-95"
+          aria-label="Message"
+        >
+          <MessageCircle className="h-3.5 w-3.5" />
+          Message
+        </button>
       </div>
     </article>
   );
